@@ -134,7 +134,7 @@ def approve_research_request(id):
     return render_template("admin/approve_research_request.jinja", research_signup_request = research_signup_request)
 
 
-@admin.route("/list_of_researches", methods=["GET", "POST"])
+@admin.route("/list_of_researches", methods=["POST"])
 def manage_researches():
     delete_research = request.form.get("delete_research")
     researches = get_research_list_admin()
