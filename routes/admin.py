@@ -119,6 +119,7 @@ def approve_research_requests():
     research_signup_requests = get_research_signup_requests()
     research_id = request.form.get("research_id")
     if research_id is not None:
+        research_id = int(research_id)
         return redirect(f"/admin/approve_research_requests/{research_id}")
     return render_template("admin/approve_research_requests.jinja", research_signup_requests=research_signup_requests)
 
