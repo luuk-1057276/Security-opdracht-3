@@ -34,17 +34,24 @@ $(document).ready(function() {
             success: function(data) {
                 $("#approveResearchRequestList").empty();
                 data.research_signup_requests.forEach(function(data) {
+                    // Use a safe method to escape HTML special characters
+                    const firstname = escapeHtml(data.firstname);
+                    const infix = data.infix ? escapeHtml(data.infix) : '';
+                    const lastname = escapeHtml(data.lastname);
+                    const title = escapeHtml(data.title);
+                    const status = escapeHtml(data.status);
+    
                     $("#approveResearchRequestList").append(`
-                        <div class="col-4" data-user="${data.firstname} ${data.infix} ${data.lastname}" data-research="${data.title}" data-status="${data.status}">
+                        <div class="col-4" data-user="${firstname} ${infix} ${lastname}" data-research="${title}" data-status="${status}">
                             <div class="card padding-bottom">
                                 <div class="card-header">
-                                    <h5 class="card-title">status : ${data.status}</h5>
+                                    <h5 class="card-title">Status: ${status}</h5>
                                 </div>
                                 <div class="card-body">
-                                    <p class="card-text">Gebruiker: ${data.firstname} ${data.infix ? data.infix : ''} ${data.lastname}</p>
-                                    <p class="card-text">Onderzoek: ${data.title}</p>
+                                    <p class="card-text">Gebruiker: ${firstname} ${infix} ${lastname}</p>
+                                    <p class="card-text">Onderzoek: ${title}</p>
                                     <form action="/admin/approve_research_requests" method="post">
-                                        <button class="btn btn-primary" type="submit" name="research_id" value="${data.id}">details bekijken</button>
+                                        <button class="btn btn-primary" type="submit" name="research_id" value="${data.id}">Details bekijken</button>
                                     </form>
                                 </div>
                             </div>
@@ -66,6 +73,15 @@ $(document).ready(function() {
             }
 
         })
+    }
+
+    function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
     //de functie om de pagina automatisch te verversen wordt alleen
     //gecalled op de pagina waar dat nodig is, om errors te voorkomen

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, Blueprint, session, redirect, flash, jsonify
 from models.model import *
+from markupsafe import escape
 
 app = Flask(__name__)
 admin = Blueprint('admin', __name__)
@@ -138,4 +139,9 @@ def manage_researches():
     delete_research = request.form.get("delete_research")
     researches = get_research_list_admin()
     research_signup_request_count = get_research_signup_requests_count()
-    return render_template("admin/list_of_researches.jinja", researches = researches, research_signup_request_count = research_signup_request_count)
+
+    sanitized_researches = []
+    for research in researches:
+        sanitized_research = {key: escape(value) if isinstance(value, str) else value for key, value in dict(research).items()}
+        sanitized_researches.append(sanitized_research)
+    return render_template("admin/list_of_researches.jinja", researches = sanitized_researches, research_signup_request_count = research_signup_request_count)
